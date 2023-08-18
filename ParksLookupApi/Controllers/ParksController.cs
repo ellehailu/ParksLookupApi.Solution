@@ -16,8 +16,21 @@ namespace ParksLookupApi.Controllers
 
         //Get api/Parks
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Park>>> Get(){
+        public async Task<ActionResult<IEnumerable<Park>>> Get()
+        {
             return await _db.Parks.ToListAsync();
+        }
+
+        // Get api/Parks/{id}
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Park>> GetPark(int id)
+        {
+            Park park = await _db.Parks.FindAsync(id);
+            if (park == null)
+            {
+                return NotFound();
+            }
+            return park;
         }
     }
 }
