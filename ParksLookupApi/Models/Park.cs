@@ -7,6 +7,6 @@ namespace ParksLookupApi.Models
         public string State { get; set; }
         public string Designation { get; set; }
 
-        public DateTime DateOfEstablishment { get; set; }
+        public int YearOfEstablishment { get; set; }
     }
 }
