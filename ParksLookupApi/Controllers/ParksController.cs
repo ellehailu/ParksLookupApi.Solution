@@ -32,5 +32,14 @@ namespace ParksLookupApi.Controllers
             }
             return park;
         }
+
+        //Create a new park
+        //POST api/Parks
+        public async Task<ActionResult<Park>> Post(Park park)
+        {
+            _db.Parks.Add(park);
+            await _db.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetPark), new { id = park.ParkId, park });
+        }
     }
 }
