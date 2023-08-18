@@ -2,10 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ParksLookupApi.Models;
 
+
 namespace ParksLookupApi.Controllers
 {
     [Route("api/[controller]")]
-    public class ParksController : Controller
+    [ApiController]
+    public class ParksController : ControllerBase
     {
         private readonly ParksLookupApiContext _db;
 
@@ -14,69 +16,106 @@ namespace ParksLookupApi.Controllers
             _db = db;
         }
 
-        //Get api/Parks
+        // GET: api/Parks
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Park>>> Get()
+        public async Task<List<Park>> Get(string name, string state, int yearOfEstablishment)
         {
-            return await _db.Parks.ToListAsync();
+            IQueryable<Park> query = _db.Parks.AsQueryable();
+
+            if (name != null)
+            {
+                query = query.Where(entry => entry.Name == name);
+            }
+
+            if (state != null)
+            {
+                query = query.Where(entry => entry.State.Contains(state));
+            }
+
+            if (yearOfEstablishment > 1700)
+            {
+                query = query.Where(entry => entry.YearOfEstablishment == yearOfEstablishment);
+            }
+
+            return await query.ToListAsync();
         }
 
-        // Get api/Parks/{id}
+
+        // GET: api/Parks/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Park>> GetPark(int id)
         {
             Park park = await _db.Parks.FindAsync(id);
+
             if (park == null)
             {
                 return NotFound();
             }
+
             return park;
         }
 
-        //Create a new park
-        //POST api/Parks
-        public async Task<ActionResult<Park>> Post(Park park)
-        {
-            _db.Parks.Add(park);
-            await _db.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetPark), new { id = park.ParkId, park });
-        }
-
-
-        //Edit existing park
-        //PUT api/Parks/{id}
-        public async Task<ActionResult> Put(int id, Park park)
+        // PUT: api/Parks/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, Park park)
         {
             if (id != park.ParkId)
             {
                 return BadRequest();
             }
 
-            _db.Parks.Update(park);
+            _db.Entry(park).State = EntityState.Modified;
 
             try
             {
                 await _db.SaveChangesAsync();
             }
-
             catch (DbUpdateConcurrencyException)
             {
                 if (!ParkExists(id))
                 {
                     return NotFound();
                 }
-
                 else
                 {
                     throw;
                 }
             }
+
+            return NoContent();
+        }
+
+        // POST: api/Parks
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Park>> Post([FromBody] Park park)
+        {
+            _db.Parks.Add(park);
+            await _db.SaveChangesAsync();
+
+            return CreatedAtAction("GetPark", new { id = park.ParkId }, park);
+        }
+
+        // // DELETE: api/Parks/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePark(int id)
+        {
+            Park park = await _db.Parks.FindAsync(id);
+            if (park == null)
+            {
+                return NotFound();
+            }
+
+            _db.Parks.Remove(park);
+            await _db.SaveChangesAsync();
+
             return NoContent();
         }
 
         private bool ParkExists(int id)
         {
-            return _db.Parks.Any(entry => entry.ParkId == id);
+            return _db.Parks.Any(e => e.ParkId == id);
         }
     }
 }
