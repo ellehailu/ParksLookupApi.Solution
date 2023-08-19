@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ParksLookupApi.Models;
@@ -18,6 +19,7 @@ namespace ParksLookupApi.Controllers
 
         // GET: api/Parks
         [HttpGet]
+        [Authorize]
         public async Task<List<Park>> Get(string name, string state, int yearOfEstablishment)
         {
             IQueryable<Park> query = _db.Parks.AsQueryable();
