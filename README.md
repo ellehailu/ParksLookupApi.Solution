@@ -28,4 +28,5 @@
 
 
 ### Known Bugs 
-- The user can't search for a two letter state name by typing in the full state name. 
+- when searching for a park with a multi-word name or a multi-word state, the user has to include spaces between the words in their query.
+ex `.../Parks?state=north dakota`
