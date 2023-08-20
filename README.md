@@ -28,7 +28,7 @@
 - Replace the place holder user name and password in the appsettings.json file with your actual username and password.
 - Confirm you have `mySql WorkBench` installed, if you don't follow the installation instructions found [here](https://dev.mysql.com/doc/workbench/en/wb-installing.html). Then in your terminal run the following command: `dotnet ef database update`
 
-- Once your local database is updated, launch postman. If you don't have postman installed, follow installation instructions found here.
+- Once your local database is updated, launch postman. If you don't have postman installed, follow installation instructions found [here](https://www.postman.com/downloads/).
 
 **Supported binding**
 
