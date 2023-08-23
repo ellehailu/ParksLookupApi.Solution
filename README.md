@@ -19,8 +19,14 @@
 
 ```
 {
-  "ConnectionStrings": {
-  "DefaultConnection": "Server=localhost;Port=3306;database=[DATABASE-NAME];uid=[YOUR-USER-NAME-HERE];pwd=[YOUR-PASSWORD-HERE];"
+    "AllowedHosts": "*",
+    "ConnectionStrings": {
+      "DefaultConnection": "Server=localhost;Port=3306;database=elle_hailu_api;uid=root;pwd=epicodus;"
+    },
+    "Jwt":{
+        "Issuer": "Issuer",
+        "Audience": "Audience",
+        "Key": [Your Personal Passkey]
     }
   }
 ```
